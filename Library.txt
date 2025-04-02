@@ -81,13 +81,13 @@ function Library.Main(Name)
         Name = "Title",
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        Position = UDim2.new(0, 0, 0, 5),
-        Size = UDim2.new(1, 0, 0, 30),
+        Position = UDim2.new(0, 10, 0, 5),
+        Size = UDim2.new(1, -20, 0, 30),
         Font = Enum.Font[Library.Theme.Font],
         Text = Name .. " v" .. Library.Version,
         TextColor3 = Library.Theme.FontColor,
         TextSize = 18,
-        TextXAlignment = Enum.TextXAlignment.Center,
+        TextXAlignment = Enum.TextXAlignment.Left,
         ZIndex = 4
     })
 
@@ -246,7 +246,7 @@ function Library.Main(Name)
             BackgroundColor3 = Library.Theme.Element,
             BackgroundTransparency = Library.Theme.ElementTransparency,
             BorderSizePixel = 0,
-            Size = UDim2.new(1, -10, 0, 40),
+            Size = UDim2.new(1, -10, 0, 30),
             Font = Enum.Font[Library.Theme.Font],
             Text = TabName,
             TextSize = 16,
@@ -262,14 +262,6 @@ function Library.Main(Name)
             CornerRadius = UDim.new(0, 4)
         })
 
-        CreateModule.Instance("UIStroke", {
-            Parent = TabButton,
-            Name = "Stroke",
-            Thickness = 1,
-            Color = Library.Theme.ElementBorder,
-            ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        })
-
         local TabElements = CreateModule.Instance("Frame", {
             Parent = Container,
             Name = TabName .. "Elements",
@@ -278,6 +270,21 @@ function Library.Main(Name)
             Position = UDim2.new(0, 0, 0, 0),
             Size = UDim2.new(1, 0, 1, 0),
             Visible = false,
+            ZIndex = 3
+        })
+
+        local TabHeader = CreateModule.Instance("TextLabel", {
+            Parent = TabElements,
+            Name = "TabHeader",
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 0, 0, 0),
+            Size = UDim2.new(1, 0, 0, 20),
+            Font = Enum.Font[Library.Theme.Font],
+            Text = TabName,
+            TextSize = 16,
+            TextColor3 = Library.Theme.FontColor,
+            TextXAlignment = Enum.TextXAlignment.Left,
             ZIndex = 3
         })
 
@@ -344,14 +351,6 @@ function Library.Main(Name)
                 CornerRadius = UDim.new(0, 4)
             })
 
-            CreateModule.Instance("UIStroke", {
-                Parent = Checkbox,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.ElementBorder,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            })
-
             CreateModule.Instance("TextLabel", {
                 Parent = Checkbox,
                 Name = "Label",
@@ -400,14 +399,6 @@ function Library.Main(Name)
                 CornerRadius = UDim.new(0, 4)
             })
 
-            local CheckStroke = CreateModule.Instance("UIStroke", {
-                Parent = CheckFrame,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.ElementBorder,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            })
-
             local CheckMark = CreateModule.Instance("ImageLabel", {
                 Parent = CheckFrame,
                 Name = "CheckMark",
@@ -424,11 +415,9 @@ function Library.Main(Name)
             local function UpdateVisuals()
                 CheckMark.Visible = IsActive.Value
                 if IsActive.Value then
-                    CheckStroke.Transparency = 1
                     CheckFrameInner.BackgroundTransparency = 0
                     CheckMark.ImageTransparency = 0
                 else
-                    CheckStroke.Transparency = 0
                     CheckFrameInner.BackgroundTransparency = 1
                     CheckMark.ImageTransparency = 1
                 end
@@ -492,14 +481,6 @@ function Library.Main(Name)
                 CornerRadius = UDim.new(0, 4)
             })
 
-            CreateModule.Instance("UIStroke", {
-                Parent = Label,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.ElementBorder,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            })
-
             AddToReg(Label)
             return Label
         end
@@ -526,14 +507,6 @@ function Library.Main(Name)
                 Parent = Button,
                 Name = "Corner",
                 CornerRadius = UDim.new(0, 4)
-            })
-
-            CreateModule.Instance("UIStroke", {
-                Parent = Button,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.ElementBorder,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             })
 
             local touchStartTime = 0
@@ -584,14 +557,6 @@ function Library.Main(Name)
                 CornerRadius = UDim.new(0, 4)
             })
 
-            CreateModule.Instance("UIStroke", {
-                Parent = Input,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.ElementBorder,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            })
-
             CreateModule.Instance("TextLabel", {
                 Parent = Input,
                 Name = "Label",
@@ -630,14 +595,6 @@ function Library.Main(Name)
                 CornerRadius = UDim.new(0, 4)
             })
 
-            CreateModule.Instance("UIStroke", {
-                Parent = TextBox,
-                Name = "Stroke",
-                Thickness = 1,
-                Color = Library.Theme.DialogInputLine,
-                ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            })
-
             TextBox.FocusLost:Connect(function(enterPressed)
                 if enterPressed then
                     spawn(function() config.Callback(TextBox.Text) end)
@@ -646,6 +603,127 @@ function Library.Main(Name)
 
             AddToReg(Input)
             return Input
+        end
+
+        function InTab.Dropdown(config)
+            local Dropdown = CreateModule.Instance("Frame", {
+                Parent = TabElements,
+                Name = config.Name,
+                BackgroundColor3 = Library.Theme.Element,
+                BackgroundTransparency = Library.Theme.ElementTransparency,
+                BorderSizePixel = 0,
+                Position = UDim2.new(0, 0, 0, 0),
+                Size = UDim2.new(0.95, 0, 0, 30),
+                ZIndex = 3
+            })
+
+            CreateModule.Instance("UICorner", {
+                Parent = Dropdown,
+                Name = "Corner",
+                CornerRadius = UDim.new(0, 4)
+            })
+
+            local DropdownButton = CreateModule.Instance("TextButton", {
+                Parent = Dropdown,
+                Name = "DropdownButton",
+                BackgroundColor3 = Library.Theme.DialogInput,
+                BorderSizePixel = 0,
+                Position = UDim2.new(0, 5, 0, 5),
+                Size = UDim2.new(1, -10, 0, 20),
+                Font = Enum.Font[Library.Theme.Font],
+                Text = config.Default or "Select an option",
+                TextSize = 14,
+                TextColor3 = Library.Theme.FontColor,
+                TextXAlignment = Enum.TextXAlignment.Left,
+                ZIndex = 3
+            })
+
+            CreateModule.Instance("UICorner", {
+                Parent = DropdownButton,
+                Name = "Corner",
+                CornerRadius = UDim.new(0, 4)
+            })
+
+            local DropdownList = CreateModule.Instance("Frame", {
+                Parent = Dropdown,
+                Name = "DropdownList",
+                BackgroundColor3 = Library.Theme.Element,
+                BorderSizePixel = 0,
+                Position = UDim2.new(0, 5, 0, 30),
+                Size = UDim2.new(1, -10, 0, 0),
+                ClipsDescendants = true,
+                Visible = false,
+                ZIndex = 4
+            })
+
+            CreateModule.Instance("UICorner", {
+                Parent = DropdownList,
+                Name = "Corner",
+                CornerRadius = UDim.new(0, 4)
+            })
+
+            local DropdownListLayout = CreateModule.Instance("UIListLayout", {
+                Parent = DropdownList,
+                Padding = UDim.new(0, 2),
+                SortOrder = Enum.SortOrder.LayoutOrder
+            })
+
+            local function UpdateListSize()
+                local totalHeight = 0
+                for _, child in pairs(DropdownList:GetChildren()) do
+                    if child:IsA("TextButton") then
+                        totalHeight = totalHeight + child.Size.Y.Offset + DropdownListLayout.Padding.Offset
+                    end
+                end
+                DropdownList.Size = UDim2.new(1, -10, 0, totalHeight)
+            end
+
+            for _, option in pairs(config.Options) do
+                local OptionButton = CreateModule.Instance("TextButton", {
+                    Parent = DropdownList,
+                    Name = option,
+                    BackgroundColor3 = Library.Theme.Element,
+                    BorderSizePixel = 0,
+                    Size = UDim2.new(1, 0, 0, 20),
+                    Font = Enum.Font[Library.Theme.Font],
+                    Text = option,
+                    TextSize = 14,
+                    TextColor3 = Library.Theme.FontColor,
+                    TextXAlignment = Enum.TextXAlignment.Left,
+                    ZIndex = 4
+                })
+
+                OptionButton.InputBegan:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.Touch then
+                        DropdownButton.Text = option
+                        DropdownList.Visible = false
+                        spawn(function() config.Callback(option) end)
+                    end
+                end)
+            end
+
+            UpdateListSize()
+
+            DropdownButton.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.Touch then
+                    DropdownList.Visible = not DropdownList.Visible
+                end
+            end)
+
+            game:GetService("UserInputService").InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.Touch then
+                    local mousePos = input.Position
+                    local dropdownPos = Dropdown.AbsolutePosition
+                    local dropdownSize = Dropdown.AbsoluteSize
+                    if mousePos.X < dropdownPos.X or mousePos.X > dropdownPos.X + dropdownSize.X or
+                       mousePos.Y < dropdownPos.Y or mousePos.Y > dropdownPos.Y + dropdownSize.Y then
+                        DropdownList.Visible = false
+                    end
+                end
+            end)
+
+            AddToReg(Dropdown)
+            return Dropdown
         end
 
         return InTab
